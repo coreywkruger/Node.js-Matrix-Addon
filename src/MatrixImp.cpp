@@ -38,6 +38,14 @@ void matrix::Init(Handle<Object> exports) {
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("getHJ"), FunctionTemplate::New(getHJ)->GetFunction());
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("getWJ"), FunctionTemplate::New(getWJ)->GetFunction());
 
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("addMatrixJ"), FunctionTemplate::New(addMatrixJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("addFloatJ"), FunctionTemplate::New(addFloatJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("subMatrixJ"), FunctionTemplate::New(subMatrixJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("subFloatJ"), FunctionTemplate::New(subFloatJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("multMatrixJ"), FunctionTemplate::New(multMatrixJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("multFloatJ"), FunctionTemplate::New(multFloatJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("divFloatJ"), FunctionTemplate::New(divFloatJ)->GetFunction());
+	
 	//Persistent<Function> 
 	matrix::constructor = Persistent<Function>::New(tpl->GetFunction());
 	exports->Set(String::NewSymbol("matrix"), constructor);
@@ -134,6 +142,73 @@ Handle<Value> matrix::getWJ(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	return scope.Close(Number::New(obj->getW()));
+}
+
+Handle<Value> matrix::addMatrixJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->addMatrix(*input);
+	return scope.Close(Instance);
+}
+
+
+Handle<Value> matrix::addFloatJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->addFloat(args[0]->NumberValue());
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::subMatrixJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->subMatrix(*input);
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::subFloatJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->subFloat(args[0]->NumberValue());
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::multMatrixJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->multMatrix(*input);
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::multFloatJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->multFloat(args[0]->NumberValue());
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::divFloatJ(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->divFloat(args[0]->NumberValue());
+	return scope.Close(Instance);
 }
 
 //Handle<Value> matrix::copyMatrixJ(const Arguments& args) {
@@ -278,8 +353,8 @@ void matrix::copyMatrix(matrix copyMe) {
 //}
 
 /////////////////////////////////////////////
-//Overload + for adding the matrix object to another matrix object.
-matrix matrix::operator+(matrix addthis) {
+//For adding one matrix object to another matrix object.
+matrix matrix::addMatrix(matrix addthis) {
 	matrix newMat(getW(), getH());
 	if (getW() == addthis.getW() && getH() == addthis.getH()) {
 		int i, j;
@@ -295,8 +370,8 @@ matrix matrix::operator+(matrix addthis) {
 }
 
 /////////////////////////////////////////////
-//Overload + for a float to all entries in the matrix object.
-matrix matrix::operator+(float addthis) {
+//For adding a float to all entries in the matrix object.
+matrix matrix::addFloat(float addthis) {
 	matrix newMat(getW(), getH());
 	int i, j;
 	for (i = 0; i < getW(); i++) {
@@ -309,8 +384,8 @@ matrix matrix::operator+(float addthis) {
 
 
 /////////////////////////////////////////////
-//Overload - for subtracting one matrix from another.
-matrix matrix::operator-(matrix addthis) {
+//For subtracting one matrix from another.
+matrix matrix::subMatrix(matrix addthis) {
 	matrix newMat(getW(), getH());
 	if (getW() == addthis.getW() && getH() == addthis.getH()) {
 		int i, j;
@@ -327,8 +402,8 @@ matrix matrix::operator-(matrix addthis) {
 }
 
 /////////////////////////////////////////////
-//Overload * for multiplying all entries in the matrix object by a single float.
-matrix matrix::operator*(float multhis) {
+//For multiplying all entries in the matrix object by a single float.
+matrix matrix::multFloat(float multhis) {
 	matrix newMat(getW(), getH());
 	int i, j;
 	for (i = 0; i < getW(); i++) {
@@ -340,8 +415,8 @@ matrix matrix::operator*(float multhis) {
 }
 
 /////////////////////////////////////////////
-//Overload - for subtracting a float from the matrix object.
-matrix matrix::operator-(float addthis) {
+//For subtracting a float from each entry in the matrix object.
+matrix matrix::subFloat(float addthis) {
 	matrix newMat(getW(), getH());
 	int i, j;
 	for (i = 0; i < getW(); i++) {
@@ -355,8 +430,8 @@ matrix matrix::operator-(float addthis) {
 
 
 /////////////////////////////////////////////
-//Overload * for multiplying two matrix objects.
-matrix matrix::operator*(matrix multhis) {
+//For multiplying two matrix objects.
+matrix matrix::multMatrix(matrix multhis) {
 	matrix newMat(getH(), multhis.getW());
 	if (getH() == multhis.getW()) {
 		int i, j;
@@ -375,4 +450,17 @@ matrix matrix::operator*(matrix multhis) {
 		std::cerr << "Matrices not eligible for multiplication: not of correct dimension. Returned NULL matrix." << std::endl;
 		return newMat;
 	}
+}
+
+/////////////////////////////////////////////
+//For dividing all entries in the matrix object by a single float.
+matrix matrix::divFloat(float multhis) {
+	matrix newMat(getW(), getH());
+	int i, j;
+	for (i = 0; i < getW(); i++) {
+		for (j = 0; j < getH(); j++) {
+			newMat.setVal(i, j, mat[i][j] / multhis);
+		}
+	}
+	return newMat;
 }

@@ -24,6 +24,14 @@ private:
 	static v8::Handle<v8::Value> transposeJ(const v8::Arguments& args);
 	static v8::Handle<v8::Value> getHJ(const v8::Arguments& args);
 	static v8::Handle<v8::Value> getWJ(const v8::Arguments& args);
+	
+	static v8::Handle<v8::Value> addMatrixJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> addFloatJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> subMatrixJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> subFloatJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> multMatrixJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> multFloatJ(const v8::Arguments& args);
+	static v8::Handle<v8::Value> divFloatJ(const v8::Arguments& args);
 	//static v8::Handle<v8::Value> copyMatrixJ(const v8::Arguments& args);
 	
 	//Original functions (un-exposed to Javascript)
@@ -39,12 +47,13 @@ private:
 	int getW();
 	//void printMatrix();
 	void copyMatrix(matrix);
-	matrix operator+(matrix addthis);
-	matrix operator+(float addthis);
-	matrix operator-(matrix subthis);
-	matrix operator-(float subthis);
-	matrix operator*(matrix multhis);
-	matrix operator*(float multhis);
+	matrix addMatrix(matrix addthis);
+	matrix addFloat(float addthis);
+	matrix subMatrix(matrix subthis);
+	matrix subFloat(float subthis);
+	matrix multMatrix(matrix multhis);
+	matrix multFloat(float multhis);
+	matrix divFloat(float divthis);
 
 	int height;
 	int width;
