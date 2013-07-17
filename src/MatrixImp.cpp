@@ -28,23 +28,23 @@ void matrix::Init(Handle<Object> exports) {
 	
 	//tpl->PrototypeTemplate()->Set(String::NewSymbol("NewInstance"), FunctionTemplate::New(NewInstance)->GetFunction());
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("createNewMatrix"), FunctionTemplate::New(createNewMatrix)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("setValJ"), FunctionTemplate::New(setValJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("getValJ"), FunctionTemplate::New(getValJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("getDetJ"), FunctionTemplate::New(getDetJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("Det2x2J"), FunctionTemplate::New(Det2x2J)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("cofactorMJ"), FunctionTemplate::New(cofactorMJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("inverseJ"), FunctionTemplate::New(inverseJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("transposeJ"), FunctionTemplate::New(transposeJ)->GetFunction());	
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("getHJ"), FunctionTemplate::New(getHJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("getWJ"), FunctionTemplate::New(getWJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("setVal"), FunctionTemplate::New(setVal)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getVal"), FunctionTemplate::New(getVal)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getDet"), FunctionTemplate::New(getDet)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("Det2x2"), FunctionTemplate::New(Det2x2)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("cofactorMatrix"), FunctionTemplate::New(cofactorMatrix)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("inverse"), FunctionTemplate::New(inverse)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("transpose"), FunctionTemplate::New(transpose)->GetFunction());	
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getH"), FunctionTemplate::New(getH)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getW"), FunctionTemplate::New(getW)->GetFunction());
 
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("addMatrixJ"), FunctionTemplate::New(addMatrixJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("addFloatJ"), FunctionTemplate::New(addFloatJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("subMatrixJ"), FunctionTemplate::New(subMatrixJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("subFloatJ"), FunctionTemplate::New(subFloatJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("multMatrixJ"), FunctionTemplate::New(multMatrixJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("multFloatJ"), FunctionTemplate::New(multFloatJ)->GetFunction());
-	tpl->PrototypeTemplate()->Set(String::NewSymbol("divFloatJ"), FunctionTemplate::New(divFloatJ)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("addMatrix"), FunctionTemplate::New(addMatrix)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("addFloat"), FunctionTemplate::New(addFloat)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("subMatrix"), FunctionTemplate::New(subMatrix)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("subFloat"), FunctionTemplate::New(subFloat)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("multMatrix"), FunctionTemplate::New(multMatrix)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("multFloat"), FunctionTemplate::New(multFloat)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("divFloat"), FunctionTemplate::New(divFloat)->GetFunction());
 	
 	//Persistent<Function> 
 	matrix::constructor = Persistent<Function>::New(tpl->GetFunction());
@@ -78,136 +78,136 @@ Handle<Value> matrix::createNewMatrix(const v8::Arguments& args) {
 //	return scope.Close(instance);
 //}
 
-Handle<Value> matrix::setValJ(const Arguments& args) {
+Handle<Value> matrix::setVal(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	obj->setVal(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
+	obj->_setVal(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue());
 	return scope.Close(Undefined());
 }
 
-Handle<Value> matrix::getValJ(const Arguments& args) {
+Handle<Value> matrix::getVal(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	return scope.Close(Number::New( obj->getVal(args[0]->NumberValue(), args[1]->NumberValue()) ));
+	return scope.Close(Number::New( obj->_getVal(args[0]->NumberValue(), args[1]->NumberValue()) ));
 }
 
-Handle<Value> matrix::getDetJ(const Arguments& args) {
+Handle<Value> matrix::getDet(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	float det = obj->getDet();
+	float det = obj->_getDet();
 	return scope.Close(Number::New( det ));
 }
 
-Handle<Value> matrix::Det2x2J(const Arguments& args) {
+Handle<Value> matrix::Det2x2(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	float det = obj->Det2x2();
+	float det = obj->_Det2x2();
 	return scope.Close(Number::New( det ));
 }
 
-Handle<Value> matrix::cofactorMJ(const Arguments& args) {
+Handle<Value> matrix::cofactorMatrix(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> tempInst = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(tempInst);
-	*inst = obj->cofactorM(args[0]->NumberValue(), args[1]->NumberValue());
+	*inst = obj->_cofactorMatrix(args[0]->NumberValue(), args[1]->NumberValue());
 	return scope.Close(tempInst);
 }
 
-Handle<Value> matrix::inverseJ(const Arguments& args) {
+Handle<Value> matrix::inverse(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> invInst = matrix::constructor->NewInstance();
 	matrix* inv = ObjectWrap::Unwrap<matrix>(invInst);
-	*inv = obj->inverse();
+	*inv = obj->_inverse();
 	return scope.Close(invInst);
 }
 
-Handle<Value> matrix::transposeJ(const Arguments& args) {
+Handle<Value> matrix::transpose(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> tranInst = matrix::constructor->NewInstance();
 	matrix* tran = ObjectWrap::Unwrap<matrix>(tranInst);
-	*tran = obj->transpose();
+	*tran = obj->_transpose();
 	return scope.Close(tranInst);
 }
 
-Handle<Value> matrix::getHJ(const Arguments& args) {
+Handle<Value> matrix::getH(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	return scope.Close(Number::New(obj->getH()));
+	return scope.Close(Number::New(obj->_getH()));
 }
 
-Handle<Value> matrix::getWJ(const Arguments& args) {
+Handle<Value> matrix::getW(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	return scope.Close(Number::New(obj->getW()));
+	return scope.Close(Number::New(obj->_getW()));
 }
 
-Handle<Value> matrix::addMatrixJ(const Arguments& args) {
+Handle<Value> matrix::addMatrix(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
 	Handle<Object> Instance = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->addMatrix(*input);
+	*inst = obj->_addMatrix(*input);
 	return scope.Close(Instance);
 }
 
 
-Handle<Value> matrix::addFloatJ(const Arguments& args) {
+Handle<Value> matrix::addFloat(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> Instance = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->addFloat(args[0]->NumberValue());
+	*inst = obj->_addFloat(args[0]->NumberValue());
 	return scope.Close(Instance);
 }
 
-Handle<Value> matrix::subMatrixJ(const Arguments& args) {
-	HandleScope scope;
-	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
-	Handle<Object> Instance = matrix::constructor->NewInstance();
-	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->subMatrix(*input);
-	return scope.Close(Instance);
-}
-
-Handle<Value> matrix::subFloatJ(const Arguments& args) {
-	HandleScope scope;
-	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
-	Handle<Object> Instance = matrix::constructor->NewInstance();
-	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->subFloat(args[0]->NumberValue());
-	return scope.Close(Instance);
-}
-
-Handle<Value> matrix::multMatrixJ(const Arguments& args) {
+Handle<Value> matrix::subMatrix(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
 	Handle<Object> Instance = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->multMatrix(*input);
+	*inst = obj->_subMatrix(*input);
 	return scope.Close(Instance);
 }
 
-Handle<Value> matrix::multFloatJ(const Arguments& args) {
+Handle<Value> matrix::subFloat(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> Instance = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->multFloat(args[0]->NumberValue());
+	*inst = obj->_subFloat(args[0]->NumberValue());
 	return scope.Close(Instance);
 }
 
-Handle<Value> matrix::divFloatJ(const Arguments& args) {
+Handle<Value> matrix::multMatrix(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	matrix* input = ObjectWrap::Unwrap<matrix>(args[0]->ToObject());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->_multMatrix(*input);
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::multFloat(const Arguments& args) {
 	HandleScope scope;
 	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
 	Handle<Object> Instance = matrix::constructor->NewInstance();
 	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
-	*inst = obj->divFloat(args[0]->NumberValue());
+	*inst = obj->_multFloat(args[0]->NumberValue());
+	return scope.Close(Instance);
+}
+
+Handle<Value> matrix::divFloat(const Arguments& args) {
+	HandleScope scope;
+	matrix* obj = ObjectWrap::Unwrap<matrix>(args.This());
+	Handle<Object> Instance = matrix::constructor->NewInstance();
+	matrix* inst = ObjectWrap::Unwrap<matrix>(Instance);
+	*inst = obj->_divFloat(args[0]->NumberValue());
 	return scope.Close(Instance);
 }
 
@@ -220,34 +220,40 @@ Handle<Value> matrix::divFloatJ(const Arguments& args) {
 
 /////////////////////////////////////////////
 //Sets the value of the entry specified.
-void matrix::setVal(int col, int row, float val) {
+void matrix::_setVal(int col, int row, float val) {
 	mat[col][row] = val;
 }
 
 /////////////////////////////////////////////
 //Returns the value of the entry specified.
-float matrix::getVal(int col, int row) {
-	return mat[col][row];
+float matrix::_getVal(int col, int row) {
+	if (col > _getW()) {
+		std::cerr << 'Column index out of range.' << std::endl;
+	} else if (row > _getH()) {
+		std::cerr << 'Row index out of range.' << std::endl;
+	} else {
+		return mat[col][row];
+	}
 }
 
 /////////////////////////////////////////////
 //Returns the determinant of the matrix object as a float.
-float matrix::getDet() {
+float matrix::_getDet() {
 
 	//This function moves along the top row of the matrix, and finds the cofactor matrix of each entry there.
 	//These cofactor matrices are recursively condensed down, until a 2x2 matrix emerges. When the 2x2 matrix
 	//is found, its determinant is returned.
-	if (getH() == 2 && getW() == 2) {
-		return Det2x2();
-	} else if (getH() > 2 && getW() > 2 && getH() == getW()) {
+	if (_getH() == 2 && _getW() == 2) {
+		return _Det2x2();
+	} else if (_getH() > 2 && _getW() > 2 && _getH() == _getW()) {
 		float value = 0;
 		int i;
-		for (i = 0; i < getW(); i++) {
-			matrix temp = cofactorM(i, 0);
-			value += pow(-1, i) * (temp.getDet()) * mat[i][0];
+		for (i = 0; i < _getW(); i++) {
+			matrix temp = _cofactorMatrix(i, 0);
+			value += pow(-1, i) * (temp._getDet()) * mat[i][0];
 		}
 		return value;
-	} else if (getW() != getH()) {
+	} else if (_getW() != _getH()) {
 		std::cerr << "Cannot get determinant of non-square matrix. Returned zero (0)." << std::endl;
 		return 0;
 	}
@@ -255,26 +261,26 @@ float matrix::getDet() {
 
 /////////////////////////////////////////////
 //Returns the cofactor matrix of the entry specified, and returns it.
-matrix matrix::cofactorM(int col, int row) {
-	matrix newMat(getW() - 1, getH() - 1);
+matrix matrix::_cofactorMatrix(int col, int row) {
+	matrix newMat(_getW() - 1, _getH() - 1);
 	int i, j;
 	int k = 0;
-	for (i = 0; i < getW(); i++) {
+	for (i = 0; i < _getW(); i++) {
 		if (i == col) {
 			i++;
 		}
-		if (i >= getW()) {
+		if (i >= _getW()) {
 			break;
 		}
 		int l = 0;
-		for (j = 0; j < getH(); j++) {
+		for (j = 0; j < _getH(); j++) {
 			if (j == row) {
 				j++;
 			}
-			if (j >= getH()) {
+			if (j >= _getH()) {
 				break;
 			}
-			newMat.setVal(k, l, mat[i][j]);
+			newMat._setVal(k, l, mat[i][j]);
 			l++;
 		}
 		k++;
@@ -285,14 +291,14 @@ matrix matrix::cofactorM(int col, int row) {
 
 /////////////////////////////////////////////
 //Returns a copy of the matrix in its inverse form.
-matrix matrix::inverse() {
-	matrix inversion(getW(), getH());
+matrix matrix::_inverse() {
+	matrix inversion(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			matrix temp = cofactorM(i, j);
-			float num = ( (pow(-1, i + j)) * temp.getDet() ) / getDet();
-			inversion.setVal(j, i, num);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			matrix temp = _cofactorMatrix(i, j);
+			float num = ( (pow(-1, i + j)) * temp._getDet() ) / _getDet();
+			inversion._setVal(j, i, num);
 		}
 	}
 	return inversion;
@@ -300,12 +306,12 @@ matrix matrix::inverse() {
 
 /////////////////////////////////////////////
 //Returns a copy of the matrix in transpose form.
-matrix matrix::transpose() {
-	matrix transM(getW(), getH());
+matrix matrix::_transpose() {
+	matrix transM(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			transM.setVal(i, j, mat[j][i]);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			transM._setVal(i, j, mat[j][i]);
 		}
 	}
 	return transM;
@@ -313,27 +319,27 @@ matrix matrix::transpose() {
 
 /////////////////////////////////////////////
 //Returns the determinant of a 2x2 matrix (if provided).
-float matrix::Det2x2() {
+float matrix::_Det2x2() {
 		return (mat[0][0]*mat[1][1] - mat[1][0]*mat[0][1]);
 }
 
 /////////////////////////////////////////////
 //Return height of the matrix.
-int matrix::getH() {
+int matrix::_getH() {
 	return height;
 }
 
 /////////////////////////////////////////////
 //Return width of the matrix.
-int matrix::getW() {
+int matrix::_getW() {
 	return width;
 }
 
-void matrix::copyMatrix(matrix copyMe) {
+void matrix::_copyMatrix(matrix copyMe) {
 	int i, j;
-	for (i = 0; i < copyMe.getW(); i++) {
-		for (j = 0; j < copyMe.getH(); j++) {
-			mat[i][j] = copyMe.getVal(i, j);
+	for (i = 0; i < copyMe._getW(); i++) {
+		for (j = 0; j < copyMe._getH(); j++) {
+			mat[i][j] = copyMe._getVal(i, j);
 		}
 	}
 }
@@ -343,10 +349,10 @@ void matrix::copyMatrix(matrix copyMe) {
 //void matrix::printMatrix() {
 //	cout << "---------------" << endl;
 //	int i;
-//	for (i = 0; i < getH(); i++) {
+//	for (i = 0; i < _getH(); i++) {
 //		int j;
-//		for (j = 0; j < getW(); j++) {
-//			cout << getVal(j, i) << " | ";
+//		for (j = 0; j < _getW(); j++) {
+//			cout << _getVal(j, i) << " | ";
 //		}
 //		cout << endl;
 //	}
@@ -354,13 +360,13 @@ void matrix::copyMatrix(matrix copyMe) {
 
 /////////////////////////////////////////////
 //For adding one matrix object to another matrix object.
-matrix matrix::addMatrix(matrix addthis) {
-	matrix newMat(getW(), getH());
-	if (getW() == addthis.getW() && getH() == addthis.getH()) {
+matrix matrix::_addMatrix(matrix addthis) {
+	matrix newMat(_getW(), _getH());
+	if (_getW() == addthis._getW() && _getH() == addthis._getH()) {
 		int i, j;
-		for (i = 0; i < getW(); i++) {
-			for (j = 0; j < getH(); j++) {
-				newMat.setVal(i, j, mat[i][j] + addthis.getVal(i, j));
+		for (i = 0; i < _getW(); i++) {
+			for (j = 0; j < _getH(); j++) {
+				newMat._setVal(i, j, mat[i][j] + addthis._getVal(i, j));
 			}
 		}
 		return newMat;
@@ -371,12 +377,12 @@ matrix matrix::addMatrix(matrix addthis) {
 
 /////////////////////////////////////////////
 //For adding a float to all entries in the matrix object.
-matrix matrix::addFloat(float addthis) {
-	matrix newMat(getW(), getH());
+matrix matrix::_addFloat(float addthis) {
+	matrix newMat(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			newMat.setVal(i, j, mat[i][j] + addthis);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			newMat._setVal(i, j, mat[i][j] + addthis);
 		}
 	}
 	return newMat;
@@ -385,13 +391,13 @@ matrix matrix::addFloat(float addthis) {
 
 /////////////////////////////////////////////
 //For subtracting one matrix from another.
-matrix matrix::subMatrix(matrix addthis) {
-	matrix newMat(getW(), getH());
-	if (getW() == addthis.getW() && getH() == addthis.getH()) {
+matrix matrix::_subMatrix(matrix addthis) {
+	matrix newMat(_getW(), _getH());
+	if (_getW() == addthis._getW() && _getH() == addthis._getH()) {
 		int i, j;
-		for (i = 0; i < getW(); i++) {
-			for (j = 0; j < getH(); j++) {
-				newMat.setVal(i, j, mat[i][j] - addthis.getVal(i, j));
+		for (i = 0; i < _getW(); i++) {
+			for (j = 0; j < _getH(); j++) {
+				newMat._setVal(i, j, mat[i][j] - addthis._getVal(i, j));
 			}
 		}
 		return newMat;
@@ -403,12 +409,12 @@ matrix matrix::subMatrix(matrix addthis) {
 
 /////////////////////////////////////////////
 //For multiplying all entries in the matrix object by a single float.
-matrix matrix::multFloat(float multhis) {
-	matrix newMat(getW(), getH());
+matrix matrix::_multFloat(float multhis) {
+	matrix newMat(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			newMat.setVal(i, j, mat[i][j]*multhis);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			newMat._setVal(i, j, mat[i][j]*multhis);
 		}
 	}
 	return newMat;
@@ -416,12 +422,12 @@ matrix matrix::multFloat(float multhis) {
 
 /////////////////////////////////////////////
 //For subtracting a float from each entry in the matrix object.
-matrix matrix::subFloat(float addthis) {
-	matrix newMat(getW(), getH());
+matrix matrix::_subFloat(float addthis) {
+	matrix newMat(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			newMat.setVal(i, j, mat[i][j] - addthis);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			newMat._setVal(i, j, mat[i][j] - addthis);
 		}
 	}
 	return newMat;
@@ -431,18 +437,18 @@ matrix matrix::subFloat(float addthis) {
 
 /////////////////////////////////////////////
 //For multiplying two matrix objects.
-matrix matrix::multMatrix(matrix multhis) {
-	matrix newMat(getH(), multhis.getW());
-	if (getH() == multhis.getW()) {
+matrix matrix::_multMatrix(matrix multhis) {
+	matrix newMat(_getH(), multhis._getW());
+	if (_getH() == multhis._getW()) {
 		int i, j;
-		for (i = 0; i < newMat.getW(); i++) {
-			for (j = 0; j < newMat.getH(); j++) {
+		for (i = 0; i < newMat._getW(); i++) {
+			for (j = 0; j < newMat._getH(); j++) {
 				float val = 0;
 				int k;
-				for (k = 0; k < getW(); k++) {
-					val += mat[k][j]*multhis.getVal(i, k);
+				for (k = 0; k < _getW(); k++) {
+					val += mat[k][j]*multhis._getVal(i, k);
 				}
-				newMat.setVal(i, j, val);
+				newMat._setVal(i, j, val);
 			}
 		}
 		return newMat;
@@ -454,12 +460,12 @@ matrix matrix::multMatrix(matrix multhis) {
 
 /////////////////////////////////////////////
 //For dividing all entries in the matrix object by a single float.
-matrix matrix::divFloat(float multhis) {
-	matrix newMat(getW(), getH());
+matrix matrix::_divFloat(float multhis) {
+	matrix newMat(_getW(), _getH());
 	int i, j;
-	for (i = 0; i < getW(); i++) {
-		for (j = 0; j < getH(); j++) {
-			newMat.setVal(i, j, mat[i][j] / multhis);
+	for (i = 0; i < _getW(); i++) {
+		for (j = 0; j < _getH(); j++) {
+			newMat._setVal(i, j, mat[i][j] / multhis);
 		}
 	}
 	return newMat;
